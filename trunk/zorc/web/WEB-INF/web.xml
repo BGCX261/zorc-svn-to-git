@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+    
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>zorc.servlet.MainServlet</servlet-class>
+        <init-param>
+            <param-name>url</param-name> 
+            <param-value>jdbc:mysql://localhost/sorc_db</param-value> 
+        </init-param>
+        <init-param>
+            <param-name>login</param-name> 
+            <param-value>zorc</param-value> 
+        </init-param>
+        <init-param>
+            <param-name>password</param-name> 
+            <param-value>zorc</param-value> 
+        </init-param>
+        <init-param>
+            <param-name>driver</param-name> 
+            <param-value>com.mysql.jdbc.Driver</param-value> 
+        </init-param>
+        <init-param>
+            <param-name>cpsize</param-name> 
+            <param-value>5</param-value> 
+        </init-param>
+    </servlet>
+    
+    <!-- Servlets mappings -->
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>/start.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Unicode filter -->
+    <filter>
+        <filter-name>CharsetFilter</filter-name>
+        <filter-class>zorc.servlet.CharsetFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping> 
+</web-app>

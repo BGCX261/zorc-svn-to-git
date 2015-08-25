@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SORC" basedir="." default="Run">
+	
+	<target name="Run">
+	</target>
+	
+	<target name="Start MySQL">
+		<exec executable="D:/eclipse/mysql/bin/mysqld.exe" spawn="true">
+			<arg value="--standalone"/>
+		</exec>
+	</target>
+	
+	<target name="Stop MySQL">
+		<exec executable="D:/eclipse/mysql/bin/mysqladmin.exe">
+			<arg value="--user=root"/>
+			<arg value="--password=root"/>
+			<arg value="shutdown"/>
+		</exec>
+	</target>
+        
+	<target name="Init data base" description="Инициализация БД">
+		<sql driver="com.mysql.jdbc.Driver"
+		     url="jdbc:mysql://localhost?encoding=UTF-8&amp;useUnicode=true&amp;characterEncoding=UTF-8"
+		     userid="root"
+		     password="root"
+				encoding="utf8">
+			<classpath>
+				<pathelement location="lib/mysql-connector-java-5.1.17-bin.jar"/>
+			</classpath>
+			<sort>
+				<fileset dir="sql" includes="*.sql"/>
+			</sort>
+		</sql>
+	</target>
+	
+</project>

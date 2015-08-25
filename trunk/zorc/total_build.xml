@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SORC" basedir="." default="war">
+
+    <property name="web" value="web" />
+    <property name="build" value="build" />
+    <property environment="env" />
+    <property name="tomcat_home" value="${env.CATALINA_HOME}" />
+    <property name="mysql_home" value="${env.MYSQL_HOME}" />
+    <property name="lib" value="${web}/WEB-INF/lib" />
+    <property name="src" value="src" />
+
+<!-- ============== Управление MySQL ====================== -->
+	<target name="mysql.start">
+    <echo>Starting MySQL Server...</echo>
+		<exec executable="${mysql_home}/bin/mysqld.exe" spawn="true">
+			<arg value="--standalone"/>
+		</exec>
+	</target>
+	
+	<target name="mysql.stop">
+		<exec executable="${mysql_home}/bin/mysqladmin.exe">
+			<arg value="--user=root"/>
+			<arg value="--password=root"/>
+			<arg value="shutdown"/>
+		</exec>
+	</target>
+
+<!-- ================== БД =================================== -->
+	<target name="db.init" description="Инициализация БД">
+		<sql driver="com.mysql.jdbc.Driver"
+		     url="jdbc:mysql://localhost?encoding=UTF-8&amp;useUnicode=true&amp;characterEncoding=UTF-8"
+		     userid="root"
+		     password="root"
+				encoding="utf8">
+			<classpath>
+				<pathelement location="${lib}/mysql-connector-java-5.1.17-bin.jar"/>
+			</classpath>
+			<sort>
+				<fileset dir="sql" includes="*.sql"/>
+			</sort>
+		</sql>
+	</target>
+	
+<!-- ================ Компиляция ======================== -->
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar" />
+            <include name="**/*.zip" />
+        </fileset>
+        <pathelement location="${tomcat_home}/lib/servlet-api.jar" />
+    </path>  
+
+  <target name="init">
+        <mkdir dir="${build}" />
+        <copy todir="${build}" filtering="false">
+            <fileset dir="${web}">
+                <include name="**/*.*" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}"
+               destdir="${build}/WEB-INF/classes"
+               debug="true"
+               deprecation="true"
+               optimize="true"
+               source="1.7"
+               target="1.7"
+               encoding="UTF-8"
+               fork="true"
+               includeantruntime="false"
+               classpathref="classpath">
+
+            <compilerarg value="-Xlint:-unchecked" />
+
+        </javac>
+    </target>
+
+    <!-- ====== Сборка проекта в war - файл ====== -->
+    <target name="war" depends="compile">
+        <echo>Building a WAR...</echo>
+        <war destfile="zorc.war"
+             basedir="${build}" />
+    </target>
+</project>
